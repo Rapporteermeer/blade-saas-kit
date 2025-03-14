@@ -80,11 +80,26 @@ class User extends Authenticatable
 
     public function switchTeam($team)
     {
+        // Update current_team_id
         $this->current_team_id = $team->id;
         $this->save();
 
+        // Get the user's role in this team
+        $teamUser = $team->users()->where('user_id', $this->id)->first();
+        if ($teamUser) {
+            $roleId = $teamUser->pivot->role_id;
+
+            // Sync the user's roles to match their role in this team
+            // First, remove any existing roles
+            $this->roles()->detach();
+
+            // Then add the role they have in this team
+            $this->roles()->attach($roleId);
+        }
+
         return $this;
     }
+
 
 
     // Roles related.

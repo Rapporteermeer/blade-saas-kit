@@ -14,18 +14,35 @@
         <a href="{{ route('dashboard') }}" class="mr-5 flex items-center space-x-2">
             <x-app-logo />
         </a>
-
         <x-navlist>
-            <x-navlist.group :heading="__('Platform')">
-                <x-navlist.item before="phosphor-house-line" :href="route('dashboard')"
-                    :current="request()->routeIs('dashboard')">
-                    {{ __('Dashboard') }}
+            <x-navlist.group :heading="__('Navigation')">
+                @php
+                $currentTeam = auth()->user()->currentTeam;
+                $teamType = $currentTeam ? $currentTeam->teamType->name : null;
+                @endphp
+
+                @if($teamType === 'Home Care')
+                <x-navlist.item before="phosphor-house-line" :href="route('areas.home-care.index')"
+                    :current="request()->routeIs('areas.home-care.index')">
+                    {{ __('Home Care Dashboard') }}
                 </x-navlist.item>
+                <!-- Add other Home Care specific navigation items -->
+                @elseif($teamType === 'Housing Assistance')
+                <x-navlist.item before="phosphor-house-line" :href="route('areas.housing-assistance.index')"
+                    :current="request()->routeIs('areas.housing-assistance.index')">
+                    {{ __('Housing Assistance Dashboard') }}
+                </x-navlist.item>
+                <!-- Add other Housing Assistance specific navigation items -->
+                @elseif($teamType === 'Outpatient Guidance')
+                <x-navlist.item before="phosphor-house-line" :href="route('areas.outpatient-guidance.index')"
+                    :current="request()->routeIs('areas.outpatient-guidance.index')">
+                    {{ __('Outpatient Guidance Dashboard') }}
+                </x-navlist.item>
+                <!-- Add other Outpatient Guidance specific navigation items -->
+                @endif
             </x-navlist.group>
         </x-navlist>
-
         <x-spacer />
-
         <x-popover align="bottom" justify="left">
             <button type="button"
                 class="w-full group flex items-center rounded-lg p-1 hover:bg-gray-800/5 dark:hover:bg-white/10">
@@ -58,8 +75,36 @@
                     </div>
                 </div>
                 <x-popover.separator />
+
+                <!-- Teams link above Settings -->
+                <x-popover.item before="phosphor-users-three" href="{{ route('teams.index') }}">{{ __('Teams')
+                    }}</x-popover.item>
+
                 <x-popover.item before="phosphor-gear-fine" href="/settings/profile">{{ __('Settings')
                     }}</x-popover.item>
+
+                <!-- Company switcher moved above logout button -->
+                @if(auth()->user()->teams->count() > 0)
+                <x-popover.separator />
+                <div class="px-1 py-1">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400 px-2 mb-1">{{ __('Switch Team') }}
+                    </p>
+                    @foreach(auth()->user()->teams as $team)
+                    <form action="{{ route('teams.switch', $team) }}" method="POST">
+                        @csrf
+                        <button type="submit"
+                            class="w-full text-left px-2 py-1 text-sm rounded-md {{ auth()->user()->current_team_id === $team->id ? 'bg-gray-100 dark:bg-gray-700' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                            {{ $team->name }}
+                            @if(auth()->user()->current_team_id === $team->id)
+                            <span class="ml-1 text-xs text-green-500">(Current)</span>
+                            @endif
+                        </button>
+                    </form>
+                    @endforeach
+                </div>
+                @endif
+
+                <!-- Logout button moved to the end -->
                 <x-popover.separator />
                 <x-form method="post" action="{{ route('logout') }}" class="w-full flex">
                     <x-popover.item before="phosphor-sign-out">{{ __('Log Out') }}</x-popover.item>
@@ -67,7 +112,6 @@
             </x-slot:menu>
         </x-popover>
     </x-sidebar>
-
     <!-- Mobile User Menu -->
     <x-header class="lg:hidden">
         <x-container class="min-h-14 flex items-center">
@@ -76,7 +120,6 @@
             </x-sidebar.toggle>
 
             <x-spacer />
-
             <x-popover align="top" justify="right">
                 <button type="button"
                     class="w-full group flex items-center rounded-lg p-1 hover:bg-gray-800/5 dark:hover:bg-white/10">
@@ -104,8 +147,37 @@
                         </div>
                     </div>
                     <x-popover.separator />
+
+                    <!-- Teams link above Settings -->
+                    <x-popover.item before="phosphor-users-three" href="{{ route('teams.index') }}">{{ __('Teams')
+                        }}</x-popover.item>
+
                     <x-popover.item before="phosphor-gear-fine" href="/settings/profile">{{ __('Settings')
                         }}</x-popover.item>
+
+                    <!-- Company switcher moved above logout button (if needed in mobile menu) -->
+                    @if(auth()->user()->teams->count() > 0)
+                    <x-popover.separator />
+                    <div class="px-1 py-1">
+                        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 px-2 mb-1">{{ __('Switch Team')
+                            }}
+                        </p>
+                        @foreach(auth()->user()->teams as $team)
+                        <form action="{{ route('teams.switch', $team) }}" method="POST">
+                            @csrf
+                            <button type="submit"
+                                class="w-full text-left px-2 py-1 text-sm rounded-md {{ auth()->user()->current_team_id === $team->id ? 'bg-gray-100 dark:bg-gray-700' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                                {{ $team->name }}
+                                @if(auth()->user()->current_team_id === $team->id)
+                                <span class="ml-1 text-xs text-green-500">(Current)</span>
+                                @endif
+                            </button>
+                        </form>
+                        @endforeach
+                    </div>
+                    @endif
+
+                    <!-- Logout button moved to the end -->
                     <x-popover.separator />
                     <x-form method="post" action="{{ route('logout') }}" class="w-full flex">
                         <x-popover.item before="phosphor-sign-out">{{ __('Log Out') }}</x-popover.item>

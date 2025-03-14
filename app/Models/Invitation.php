@@ -9,7 +9,7 @@ class Invitation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['team_id', 'email', 'token', 'role_id'];
+    protected $fillable = ['team_id', 'email', 'token', 'role_id', 'expires_at'];
 
     public function team()
     {
