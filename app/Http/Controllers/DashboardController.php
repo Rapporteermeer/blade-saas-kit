@@ -7,11 +7,14 @@ use App\Models\TeamType;
 
 class DashboardController extends Controller
 {
+    // Deze controller is verantwoordelijk voor het doorverwijzen van gebruikers naar het juiste dashboard
+    // op basis van het type team waartoe ze behoren.
+
     public function redirect()
     {
         $user = auth()->user();
 
-        // If user has no current team, redirect to teams page
+        // Als de gebruiker geen huidig team heeft, stuur ze naar de teams pagina
         if (!$user->current_team_id) {
             return redirect()->route('teams.index')
                 ->with('info', 'Please select or create a team first.');
@@ -20,7 +23,7 @@ class DashboardController extends Controller
         $currentTeam = $user->currentTeam;
         $teamType = $currentTeam->teamType;
 
-        // Redirect based on team type
+        // Stuur de gebruiker door naar het juiste dashboard op basis van het team type
         switch ($teamType->name) {
             case 'Home Care':
                 return redirect()->route('areas.home-care.index');
@@ -29,8 +32,9 @@ class DashboardController extends Controller
             case 'Outpatient Guidance':
                 return redirect()->route('areas.outpatient-guidance.index');
             default:
-                // Fallback for any new team types
+                // Fallback voor eventuele nieuwe team types
                 return redirect()->route('teams.index');
         }
     }
+
 }

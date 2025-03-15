@@ -14,6 +14,8 @@
         <a href="{{ route('dashboard') }}" class="mr-5 flex items-center space-x-2">
             <x-app-logo />
         </a>
+
+        <!-- Toont navigatie-items afhankelijk van het type team. -->
         <x-navlist>
             <x-navlist.group :heading="__('Navigation')">
                 @php
@@ -42,7 +44,9 @@
                 @endif
             </x-navlist.group>
         </x-navlist>
+
         <x-spacer />
+
         <x-popover align="bottom" justify="left">
             <button type="button"
                 class="w-full group flex items-center rounded-lg p-1 hover:bg-gray-800/5 dark:hover:bg-white/10">
@@ -74,16 +78,17 @@
                         <span class="truncate text-xs">{{ auth()->user()->email }}</span>
                     </div>
                 </div>
+
                 <x-popover.separator />
 
-                <!-- Teams link above Settings -->
+                <!-- Teams link -->
                 <x-popover.item before="phosphor-users-three" href="{{ route('teams.index') }}">{{ __('Teams')
                     }}</x-popover.item>
 
                 <x-popover.item before="phosphor-gear-fine" href="/settings/profile">{{ __('Settings')
                     }}</x-popover.item>
 
-                <!-- Company switcher moved above logout button -->
+                <!-- Team switcher -->
                 @if(auth()->user()->teams->count() > 0)
                 <x-popover.separator />
                 <div class="px-1 py-1">
@@ -104,7 +109,7 @@
                 </div>
                 @endif
 
-                <!-- Logout button moved to the end -->
+                <!-- Logout -->
                 <x-popover.separator />
                 <x-form method="post" action="{{ route('logout') }}" class="w-full flex">
                     <x-popover.item before="phosphor-sign-out">{{ __('Log Out') }}</x-popover.item>
@@ -148,14 +153,14 @@
                     </div>
                     <x-popover.separator />
 
-                    <!-- Teams link above Settings -->
+                    <!-- Teams link -->
                     <x-popover.item before="phosphor-users-three" href="{{ route('teams.index') }}">{{ __('Teams')
                         }}</x-popover.item>
 
                     <x-popover.item before="phosphor-gear-fine" href="/settings/profile">{{ __('Settings')
                         }}</x-popover.item>
 
-                    <!-- Company switcher moved above logout button (if needed in mobile menu) -->
+                    <!-- Team switcher -->
                     @if(auth()->user()->teams->count() > 0)
                     <x-popover.separator />
                     <div class="px-1 py-1">
@@ -177,7 +182,7 @@
                     </div>
                     @endif
 
-                    <!-- Logout button moved to the end -->
+                    <!-- Logout -->
                     <x-popover.separator />
                     <x-form method="post" action="{{ route('logout') }}" class="w-full flex">
                         <x-popover.item before="phosphor-sign-out">{{ __('Log Out') }}</x-popover.item>
@@ -187,6 +192,7 @@
         </x-container>
     </x-header>
 
+    <!-- Inhoud van de pagina -->
     {{ $slot }}
 
 </body>

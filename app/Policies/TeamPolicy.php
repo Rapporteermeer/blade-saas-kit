@@ -12,6 +12,7 @@ class TeamPolicy
 
     public function before(User $user, $ability)
     {
+        // SuperAdmins mogen alles.
         if ($user->isSuperAdmin()) {
             return true;
         }
@@ -19,17 +20,18 @@ class TeamPolicy
 
     public function view(User $user, Team $team)
     {
+        // Gebruiker mag team bekijken als ze lid zijn
         return $user->teams->contains($team->id);
     }
+
     public function create(User $user)
     {
-        // Only allow users with the Owner role to create teams
-        // For new users without any teams, we'll still allow them to create their first team
+        // Nieuwe gebruikers mogen hun eerste team aanmaken.
         if ($user->teams()->count() === 0) {
-            return true; // Allow new users to create their first team
+            return true;
         }
 
-        // Check if the user has the Owner role in any of their teams
+        // Daarna alleen als ze Owner zijn van een bestaand team.
         foreach ($user->teams as $team) {
             $role = $team->users()->where('user_id', $user->id)->first()->pivot->role_id;
             $roleName = \App\Models\Role::find($role)->name;
@@ -39,34 +41,44 @@ class TeamPolicy
             }
         }
 
-        return false; // User is not an owner of any team
+        // Anders mag het team niet aangemaakt worden.
+        return false;
     }
 
     public function update(User $user, Team $team)
     {
+        // Alleen de eigenaar mag het team bijwerken.
         return $user->id === $team->owner_id;
     }
 
     public function delete(User $user, Team $team)
     {
+        // Alleen de eigenaar mag het team verwijderen.
         return $user->id === $team->owner_id;
     }
 
     public function invite(User $user, Team $team)
     {
+        // Alleen de eigenaar en de Employer mogen leden uitnodigen.
         $role = $team->users()->where('user_id', $user->id)->first()->pivot->role_id;
         $roleName = \App\Models\Role::find($role)->name;
 
         return $user->id === $team->owner_id || in_array($roleName, ['Owner', 'Employer']);
     }
 
+
+    // Methoden voor het beheren van teamleden
+
+
     public function viewMembers(User $user, Team $team)
     {
+        // Alle teamleden mogen andere leden bekijken.
         return $user->teams->contains($team->id);
     }
 
     public function updateMembers(User $user, Team $team)
     {
+        // Alleen de eigenaar en de Employer mogen teamleden bijwerken.
         $role = $team->users()->where('user_id', $user->id)->first()->pivot->role_id;
         $roleName = \App\Models\Role::find($role)->name;
 
@@ -75,6 +87,7 @@ class TeamPolicy
 
     public function removeMembers(User $user, Team $team)
     {
+        // Alleen de eigenaar en de Employer mogen teamleden verwijderen.
         $role = $team->users()->where('user_id', $user->id)->first()->pivot->role_id;
         $roleName = \App\Models\Role::find($role)->name;
 

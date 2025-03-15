@@ -8,47 +8,42 @@ use App\Models\Invitation;
 
 class ProcessInvitationAfterLogin
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
+    // Deze middleware verwerkt uitnodigingen nadat een gebruiker is ingelogd
+    // Als er een uitnodigingstoken in de sessie staat, wordt deze verwerkt
     public function handle(Request $request, Closure $next)
     {
         $response = $next($request);
 
-        // Check if user is logged in and has an invitation token in session
+        // Controleer of gebruiker is ingelogd en een uitnodigingstoken in sessie heeft.
         if (auth()->check() && session()->has('invitation_token')) {
             $token = session()->pull('invitation_token');
 
-            // Find the invitation
+            // Zoek de uitnodiging
             $invitation = Invitation::where('token', $token)
                 ->where('expires_at', '>', now())
                 ->first();
 
             if ($invitation) {
-                // Check if user is already a member of the team
+                // Controleer of gebruiker al lid is van het team
                 if ($invitation->team->users()->where('user_id', auth()->id())->exists()) {
                     $invitation->delete();
                     return redirect()->route('teams.show', $invitation->team)
                         ->with('info', 'You are already a member of this team.');
                 }
 
-                // Add user to team
+                // Zo niet, voeg gebruiker toe aan team.
                 $invitation->team->users()->attach(auth()->id(), ['role_id' => $invitation->role_id]);
 
-                // Set this as the user's current team
+                // Stel dit in als huidig team in.
                 auth()->user()->switchTeam($invitation->team);
 
-                // Delete invitation
+                // Verwijder uitnodiging.
                 $invitation->delete();
 
-                // Clear the invited email from session
+                // Verwijder de uitgenodigde email uit de sessie.
                 session()->forget('invited_email');
 
-                // Redirect to dashboard
+                // Stuur gebruiker door naar dashboard met succesmelding.
                 return redirect()->route('dashboard')
                     ->with('success', 'You have joined the team!');
             }

@@ -59,10 +59,12 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
 
-    // Teams related.
+    // Teams gerelateerd
+
 
     public function teams()
     {
+        // Een gebruiker kan meerdere teams hebben en heeft een rol in elk team.
         return $this->belongsToMany(Team::class, 'team_user')
             ->withPivot('role_id')
             ->withTimestamps();
@@ -70,30 +72,32 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function ownedTeams()
     {
+        // Teams waarvan de gebruiker eigenaar is.
         return $this->hasMany(Team::class, 'owner_id');
     }
 
     public function currentTeam()
     {
+        // Het huidige actieve team van de gebruiker.
         return $this->belongsTo(Team::class, 'current_team_id');
     }
 
     public function switchTeam($team)
     {
-        // Update current_team_id
+        // Schakelt naar een ander team.
         $this->current_team_id = $team->id;
         $this->save();
 
-        // Get the user's role in this team
+        // Stelt het nieuwe team in als huidig team
         $teamUser = $team->users()->where('user_id', $this->id)->first();
         if ($teamUser) {
             $roleId = $teamUser->pivot->role_id;
 
-            // Sync the user's roles to match their role in this team
-            // First, remove any existing roles
+            // Synchroniseert de rollen van de gebruiker met hun rol in dit team.
+            // Eerst, verwijder alle bestaande rollen.
             $this->roles()->detach();
 
-            // Then add the role they have in this team
+            // Voeg de rol toe die de gebruiker heeft in dit team.
             $this->roles()->attach($roleId);
         }
 
@@ -102,20 +106,23 @@ class User extends Authenticatable implements MustVerifyEmail
 
 
 
-    // Roles related.
+    // Rollen gerelateerd
 
     public function roles()
     {
+        // Een gebruiker kan meerdere rollen hebben.
         return $this->belongsToMany(Role::class, 'role_user');
     }
 
     public function hasRole($roleName)
     {
+        // Controleert of de gebruiker een bepaalde rol heeft.
         return $this->roles()->where('name', $roleName)->exists();
     }
 
     public function isSuperAdmin()
     {
+        // Controleert of de gebruiker de rol "SuperAdmin" heeft.
         return $this->hasRole('SuperAdmin');
     }
 

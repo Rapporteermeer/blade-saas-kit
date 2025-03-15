@@ -7,6 +7,8 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Auth\VerificationController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Settings;
+use App\Http\Middleware\EnsureHasTeam;
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegistrationController::class, 'create'])->name('register');
@@ -29,6 +31,16 @@ Route::middleware('auth')->group(function () {
 
     Route::get('confirm-password', [ConfirmationController::class, 'create'])->name('password.confirm');
     Route::post('confirm-password', [ConfirmationController::class, 'store'])->name('confirmation.store');
+});
+
+Route::middleware(['auth', EnsureHasTeam::class])->group(function () {
+    Route::redirect('settings', 'settings/profile');
+    Route::get('settings/profile', [Settings\ProfileController::class, 'edit'])->name('settings.profile.edit');
+    Route::put('settings/profile', [Settings\ProfileController::class, 'update'])->name('settings.profile.update');
+    Route::delete('settings/profile', [Settings\ProfileController::class, 'destroy'])->name('settings.profile.destroy');
+    Route::get('settings/password', [Settings\PasswordController::class, 'edit'])->name('settings.password.edit');
+    Route::put('settings/password', [Settings\PasswordController::class, 'update'])->name('settings.password.update');
+    Route::get('settings/appearance', [Settings\AppearanceController::class, 'edit'])->name('settings.appearance.edit');
 });
 
 Route::post('logout', [LoginController::class, 'destroy'])->name('logout');

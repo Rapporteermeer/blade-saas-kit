@@ -20,7 +20,9 @@
             <!-- Name -->
             <x-input type="text" :label="__('Full name')" name="name" required autofocus autocomplete="name" />
 
+
             <!-- Email Address -->
+            <!-- Als gebruiker via een uitnodiging komt, is e-mail vooraf ingevuld en niet wijzigbaar. -->
             @if(session('invited_email'))
             <div>
                 <x-label for="email" :value="__('Email address')" />
@@ -41,7 +43,8 @@
             <x-input type="password" :label="__('Confirm password')" name="password_confirmation" required
                 autocomplete="new-password" />
 
-            <!-- Team Fields (only shown if not invited) -->
+            <!-- Team Fields -->
+            <!-- Als gebruiker niet via uitnodiging komt, moet ook een team worden aangemaakt. -->
             @if(!session('invitation_token'))
             <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">{{ __('Create Your Team') }}</h3>

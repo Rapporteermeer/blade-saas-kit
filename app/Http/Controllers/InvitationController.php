@@ -57,38 +57,45 @@ class InvitationController extends Controller
         return redirect()->route('teams.show', $team)->with('success', 'Invitation sent successfully!');
     }
 
+
+    // Verwerkt het accepteren van een uitnodiging.
     public function accept($token)
     {
+        // Zoek de uitnodiging op basis van token.
         $invitation = Invitation::where('token', $token)
             ->where('expires_at', '>', now())
             ->firstOrFail();
 
-        // Check if user is logged in
+        // Als gebruiker is ingelogd:
         if (auth()->check()) {
-            // Check if user is already a member of the team
+            // Voeg gebruiker toe aan team
             if ($invitation->team->users()->where('user_id', auth()->id())->exists()) {
                 $invitation->delete();
                 return redirect()->route('teams.show', $invitation->team)
                     ->with('info', 'You are already a member of this team.');
             }
 
-            // Add user to team
+            // Voeg gebruiker toe aan team.
             $invitation->team->users()->attach(auth()->id(), ['role_id' => $invitation->role_id]);
 
-            // Set this as the user's current team
+            // Stel dit in als huidig team in.
             auth()->user()->switchTeam($invitation->team);
 
-            // Delete invitation
+            // Verwijder uitnodiging.
             $invitation->delete();
 
-            // Redirect to dashboard which will handle redirection to the appropriate area
+            // Stuur gebruiker door naar dashboard met succesmelding.
             return redirect()->route('dashboard')
                 ->with('success', 'You have joined the team!');
-        } else {
-            // Store invitation token in session for after registration/login
+        }
+        // Anders:
+        else {
+            // Sla uitnodigingstoken op in sessie
             session(['invitation_token' => $token]);
-            session(['invited_email' => $invitation->email]); // Store the invited email
+            // Sla uitgenodigde email op in sessie
+            session(['invited_email' => $invitation->email]);
 
+            // Stuur gebruiker door naar registratiepagina met info-melding.
             return redirect()->route('register')
                 ->with('info', 'Please register or login to accept the invitation.');
         }
