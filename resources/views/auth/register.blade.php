@@ -58,8 +58,10 @@
 
                 <div class="mt-4">
                     <x-label for="team_type_id" :value="__('Team Type')" />
-                    <x-select id="team_type_id" name="team_type_id" class="block mt-1 w-full" required>
-                        <option value="">{{ __('Select a team type') }}</option>
+                    <x-select id="team_type_id" name="team_type_id"
+                        class="block mt-1 w-full dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:focus:border-indigo-500 dark:focus:ring-indigo-500"
+                        required>
+                        <option value="" disabled selected>{{ __('Select a team type') }}</option>
                         @foreach($teamTypes as $type)
                         <option value="{{ $type->id }}" {{ old('team_type_id')==$type->id ? 'selected' : '' }}>
                             {{ $type->name }}
