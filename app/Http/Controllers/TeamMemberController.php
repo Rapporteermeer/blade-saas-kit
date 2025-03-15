@@ -21,7 +21,7 @@ class TeamMemberController extends Controller
 
     public function edit(Team $team, User $user)
     {
-        Gate::auto('updateMembers', $team);
+        Gate::authorize('updateMembers', $team);
 
         // Check if the user is a member of this team
         $teamUser = $team->users()->where('user_id', $user->id)->first();
@@ -38,7 +38,7 @@ class TeamMemberController extends Controller
 
     public function update(Request $request, Team $team, User $user)
     {
-        Gate::auto('updateMembers', $team);
+        Gate::authorize('updateMembers', $team);
 
         // Check if the user is a member of this team
         if (!$team->users()->where('user_id', $user->id)->exists()) {
@@ -64,7 +64,7 @@ class TeamMemberController extends Controller
 
     public function destroy(Team $team, User $user)
     {
-        Gate::auto('removeMembers', $team);
+        Gate::authorize('removeMembers', $team);
 
         // Prevent removing the owner
         if ($team->owner_id === $user->id) {

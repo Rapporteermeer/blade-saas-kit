@@ -2,8 +2,16 @@
     <x-container>
         <div class="max-w-2xl mx-auto">
             <div class="mb-6">
-                <x-heading>{{ __('Edit Member Role') }}</x-heading>
-                <p class="text-gray-500 dark:text-gray-400">{{ __('Update the role for') }} {{ $user->name }}</p>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <x-heading>{{ __('Edit Member Role') }}</x-heading>
+                        <p class="text-gray-500 dark:text-gray-400">{{ __('Update the role for') }} {{ $user->name }}
+                        </p>
+                    </div>
+                    <x-button href="{{ route('teams.show', $team) }}" variant="secondary" before="phosphor-arrow-left">
+                        {{ __('Back to Team') }}
+                    </x-button>
+                </div>
             </div>
 
             <form action="{{ route('teams.members.update', [$team, $user]) }}" method="POST">

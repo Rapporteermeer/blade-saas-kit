@@ -23,6 +23,14 @@
             </div>
         </div>
 
+        @if(session()->has('success'))
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)"
+            class="mb-4 p-4 bg-green-100 dark:bg-green-800/20 border border-green-200 dark:border-green-800/30 rounded-lg text-green-700 dark:text-green-400">
+            {{ session('success') }}
+        </div>
+        @endif
+
+
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <h2 class="text-xl font-semibold mb-4">{{ __('Team Members') }}</h2>
 
