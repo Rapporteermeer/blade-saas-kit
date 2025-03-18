@@ -13,6 +13,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Stripe middleware voorkomt CSRF verplichtingen in stripe.
+        $middleware->validateCsrfTokens(except: [
+            'stripe/*',
+        ]);
+
         $middleware->append(ProcessInvitationAfterLogin::class);
         $middleware->append(EnsureHasTeam::class);
     })
