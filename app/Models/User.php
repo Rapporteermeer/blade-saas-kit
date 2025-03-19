@@ -45,6 +45,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
+            'trial_ends_at'     => 'datetime',
         ];
     }
 
@@ -127,4 +128,25 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasRole('SuperAdmin');
     }
 
+
+    // Subscription gerelateerd
+
+    public function needsSubscription(): bool
+    {
+        // Alleen team eigenaren hebben abonnementen nodig.
+        return $this->ownedTeams()->count() > 0;
+    }
+
+
+    // Controleert of de gebruiker een geldige proefperiode of abonnement heeft.
+    public function hasValidSubscriptionOrTrial(): bool
+    {
+        // Als de gebruiker geen abonnement nodig heeft, retourneer true
+        if (!$this->needsSubscription()) {
+            return true;
+        }
+
+        // Controleert of de gebruiker op proefperiode is of een actief abonnement heeft
+        return $this->onTrial() || $this->subscribed();
+    }
 }

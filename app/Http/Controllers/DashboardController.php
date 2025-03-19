@@ -15,16 +15,20 @@ class DashboardController extends Controller
         $user = auth()->user();
 
         // Als de gebruiker geen huidig team heeft, stuur ze naar de teams pagina
-        if (!$user->current_team_id) {
+        if ($user->needsSubscription() && !$user->hasValidSubscriptionOrTrial()) {
+            return redirect()->route('billing.portal')
+                ->with('warning', 'Your trial has expired. Please subscribe to continue using the platform.');
+        }
+
+        $team = $user->currentTeam;
+
+        if (!$team) {
             return redirect()->route('teams.index')
                 ->with('info', 'Please select or create a team first.');
         }
 
-        $currentTeam = $user->currentTeam;
-        $teamType = $currentTeam->teamType;
-
         // Stuur de gebruiker door naar het juiste dashboard op basis van het team type
-        switch ($teamType->name) {
+        switch ($team->teamType->name) {
             case 'Home Care':
                 return redirect()->route('areas.home-care.index');
             case 'Housing Assistance':
@@ -32,7 +36,6 @@ class DashboardController extends Controller
             case 'Outpatient Guidance':
                 return redirect()->route('areas.outpatient-guidance.index');
             default:
-                // Fallback voor eventuele nieuwe team types
                 return redirect()->route('teams.index');
         }
     }

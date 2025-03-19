@@ -76,6 +76,11 @@ class RegistrationController extends Controller
             $user->current_team_id = $team->id;
             $user->save();
 
+            // Start a 30-day trial for the team owner
+            $user->createAsStripeCustomer();
+            $user->trial_ends_at = now()->addDays(30);
+            $user->save();
+
             Auth::login($user);
 
             // Redirect to dashboard which will handle redirection to the appropriate area
@@ -92,7 +97,4 @@ class RegistrationController extends Controller
             return redirect()->route('invitations.accept', $token);
         }
     }
-
-
-
 }

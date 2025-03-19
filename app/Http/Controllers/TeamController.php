@@ -50,10 +50,19 @@ class TeamController extends Controller
         $ownerRole = Role::where('name', 'Owner')->first();
         $team->users()->attach(auth()->id(), ['role_id' => $ownerRole->id]);
 
+        // Start trial for the team owner if they don't already have one
+        $user = auth()->user();
+        if (!$user->onTrial() && !$user->subscribed()) {
+            // Create a generic trial that isn't tied to a specific plan yet
+            $user->createAsStripeCustomer();
+            $user->trial_ends_at = now()->addDays(30);
+            $user->save();
+        }
+
         // Set as current team
         auth()->user()->switchTeam($team);
 
-        return redirect()->route('teams.show', $team)->with('success', 'Team created successfully!');
+        return redirect()->route('teams.show', $team)->with('success', 'Team created successfully! You have a 30-day free trial.');
     }
 
 

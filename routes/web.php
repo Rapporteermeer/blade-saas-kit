@@ -21,3 +21,6 @@ require __DIR__ . '/areas.php';
 
 // Include authentication routes
 require __DIR__ . '/auth.php';
+
+// Include billing routes
+require __DIR__ . '/billing.php';

@@ -5,6 +5,7 @@ use App\Http\Middleware\ProcessInvitationAfterLogin;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\EnsureUserHasSubscription;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->append(ProcessInvitationAfterLogin::class);
         $middleware->append(EnsureHasTeam::class);
+        $middleware->append(EnsureUserHasSubscription::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

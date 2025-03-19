@@ -88,6 +88,11 @@
                 <x-popover.item before="phosphor-gear-fine" href="/settings/profile">{{ __('Settings')
                     }}</x-popover.item>
 
+                @if(auth()->user()->needsSubscription())
+                <x-popover.item before="phosphor-credit-card" href="{{ route('billing.index') }}">{{ __('Billing')
+                    }}</x-popover.item>
+                @endif
+
                 <!-- Team switcher -->
                 @if(auth()->user()->teams->count() > 0)
                 <x-popover.separator />
@@ -159,6 +164,11 @@
 
                     <x-popover.item before="phosphor-gear-fine" href="/settings/profile">{{ __('Settings')
                         }}</x-popover.item>
+
+                    @if(auth()->user()->needsSubscription())
+                    <x-popover.item before="phosphor-credit-card" href="{{ route('billing.index') }}">{{ __('Billing')
+                        }}</x-popover.item>
+                    @endif
 
                     <!-- Team switcher -->
                     @if(auth()->user()->teams->count() > 0)
