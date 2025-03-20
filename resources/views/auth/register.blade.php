@@ -17,6 +17,8 @@
             </div>
             @endif
 
+            @honeypot
+
             <!-- Name -->
             <x-input type="text" :label="__('Full name')" name="name" required autofocus autocomplete="name" />
 

@@ -9,8 +9,9 @@ use App\Http\Controllers\Auth\VerificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Settings;
 use App\Http\Middleware\EnsureHasTeam;
+use Spatie\Honeypot\ProtectAgainstSpam;
 
-Route::middleware('guest')->group(function () {
+Route::middleware(['guest', ProtectAgainstSpam::class])->group(function () {
     Route::get('register', [RegistrationController::class, 'create'])->name('register');
     Route::post('register', [RegistrationController::class, 'store']);
 
