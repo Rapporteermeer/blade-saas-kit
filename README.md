@@ -2,6 +2,13 @@
 
 Mijn eigen Saas starter kit met Blade & Alphine.js. (GEEN LIVEWIRE)
 
+## Command op deze starter kit te gebruiken
+
+```
+laravel new naamvandeapplicatie --using=rapporteermeer/blade-saas-kit
+composer artisan migrate:fresh --seed
+```
+
 ## Team Types aanpassen
 
 De applicatie komt met voorgedefinieerde team types (Home Care, Housing Assistance, Outpatient Guidance). Om deze aan te passen:
