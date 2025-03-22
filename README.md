@@ -7,6 +7,7 @@ Mijn eigen Saas starter kit met Blade & Alphine.js. (GEEN LIVEWIRE)
 ```
 laravel new naamvandeapplicatie --using=rapporteermeer/blade-saas-kit
 composer run dev
+php artisan optimize
 ```
 
 ## Team Types aanpassen
