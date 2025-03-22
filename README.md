@@ -87,7 +87,7 @@ De applicatie komt met voorgedefinieerde rollen (SuperAdmin, Owner, Employer, Em
    ```
 
 4. **Update Views**:
-   - Controleer uitnodigings- en ledenbewerkingsformulieren om ervoor te zorgen dat ze de juiste rollen weergeven
+   - Controleer uitnodigings- en ledenbewerkingsformulieren + RegistrationController om ervoor te zorgen dat ze de juiste rollen weergeven
 
 5. **Voer Database Migraties en Seeders uit**:
    ```bash
