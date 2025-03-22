@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "imacrayon/blade-starter-kit",
+    "name": "rapporteermeer/blade-saas-kit",
     "type": "project",
     "description": "The unofficial Laravel starter kit for Blade.",
     "keywords": [
