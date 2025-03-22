@@ -22,7 +22,8 @@
                     </div>
                     @if(auth()->user()->current_team_id === $team->id)
                     <span
-                        class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded dark:bg-green-900 dark:text-green-100">Current</span>
+                        class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded dark:bg-green-900 dark:text-green-100">{{
+                        __('Current') }}</span>
                     @endif
                 </div>
 

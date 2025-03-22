@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 
 <head>
@@ -106,7 +105,7 @@
                             class="w-full text-left px-2 py-1 text-sm rounded-md {{ auth()->user()->current_team_id === $team->id ? 'bg-gray-100 dark:bg-gray-700' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                             {{ $team->name }}
                             @if(auth()->user()->current_team_id === $team->id)
-                            <span class="ml-1 text-xs text-green-500">(Current)</span>
+                            <span class="ml-1 text-xs text-green-500">{{ __('(Current)') }}</span>
                             @endif
                         </button>
                     </form>
@@ -184,7 +183,7 @@
                                 class="w-full text-left px-2 py-1 text-sm rounded-md {{ auth()->user()->current_team_id === $team->id ? 'bg-gray-100 dark:bg-gray-700' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                 {{ $team->name }}
                                 @if(auth()->user()->current_team_id === $team->id)
-                                <span class="ml-1 text-xs text-green-500">(Current)</span>
+                                <span class="ml-1 text-xs text-green-500">{{ __('Current') }}</span>
                                 @endif
                             </button>
                         </form>

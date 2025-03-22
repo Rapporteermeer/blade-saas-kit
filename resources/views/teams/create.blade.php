@@ -1,7 +1,10 @@
 <x-layouts.app :title="__('Create Team')">
     <x-container>
         <div class="max-w-2xl mx-auto">
-            <x-heading class="mb-6">{{ __('Create New Team') }}</x-heading>
+            <div class="flex items-center mb-6">
+
+                <x-heading>{{ __('Create New Team') }}</x-heading>
+            </div>
 
             <form action="{{ route('teams.store') }}" method="POST">
                 @csrf
@@ -28,6 +31,9 @@
                     </div>
 
                     <div class="flex justify-end mt-6">
+                        <a href="{{ route('teams.index') }}" class="my-2 mr-4 text-gray-500 dark:text-gray-400">
+                            {{ __('Terug') }}
+                        </a>
                         <x-button type="submit">{{ __('Create Team') }}</x-button>
                     </div>
                 </div>

@@ -34,9 +34,7 @@
                         {{ $subscribed
                         ? __('You can manage your subscription, update payment methods, or view billing history through
                         the Stripe Customer Portal.')
-                        : __('Choose a subscription plan that fits your needs. You can manage your subscription anytime
-                        through the Stripe Customer Portal.')
-                        }}
+                        : __('Choose a subscription plan that fits your needs.') }}
                     </p>
                     @if(!$subscribed)
                     <div class="mb-6" x-data="{ selectedPlan: '{{ env('STRIPE_PRICE_THREE_MONTHLY_ID') }}' }">
